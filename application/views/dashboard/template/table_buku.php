@@ -106,12 +106,13 @@
             label.innerHTML = "Edit Buku"
             judul.value = e.judul;
             Array.prototype.forEach.call(penerbit.children, (el) => {
-                console.log(el.value, e.id, el.value == e.id);
-                if (el.value == e.id) {
+                console.log(el.value, e.id_penerbit, el.value == e.id_penerbit);
+                if (el.value == e.id_penerbit) {
                     el.setAttribute('selected', true);
-                } else
-                    el.setAttribute('selected', false);
-                    $('#penerbit').selectpicker('refresh')
+                    $('#penerbit').selectpicker('val', el.value)
+                } else{
+                    el.setAttribute('selected', null);
+                }
             });
             jumlah.value = e.jumlah;
             pengarang.value = e.pengarang;
@@ -157,6 +158,10 @@
             {
                 name: 'id',
                 type: 'number',
+                visible: false
+            },{
+                name: 'id_penerbit',
+                type: 'text',
                 visible: false
             }
         ]

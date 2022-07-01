@@ -98,8 +98,12 @@ class Buku extends CI_Controller
         $res = [];
         $data = $this->buku_model->get();
         foreach($data as $d){
-            $d->penerbit = $this->penerbit_model->findById($d->penerbit)->penerbit_buku;
-            array_push($res, $d);
+            // $d->penerbit = $this->penerbit_model->findById($d->penerbit)->penerbit_buku;
+            //  = $this->penerbit_model->findById($d->penerbit)->id;
+            $val = json_decode(json_encode($d), true);;
+            $val['penerbit'] = $this->penerbit_model->findById($d->penerbit)->penerbit_buku;
+            $val['id_penerbit'] = $this->penerbit_model->findById($d->penerbit)->id;
+            array_push($res, $val);
         }
         return $this->output
             ->set_content_type('application/json')
