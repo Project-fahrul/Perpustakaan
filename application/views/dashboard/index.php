@@ -28,7 +28,6 @@
                     <div class="small-box bg-info">
                         <div class="inner">
                             <h3><?php echo $this->mahasiswa_model->length()?></h3>
-
                             <p>Total Mahasiswa</p>
                         </div>
                         <div class="icon">
@@ -56,7 +55,7 @@
                     <!-- small box -->
                     <div class="small-box bg-warning">
                         <div class="inner">
-                            <h3>44</h3>
+                            <h3><?php echo $this->peminjaman_model->length()?></h3>
                             <p>Peminjaman</p>
                         </div>
                         <div class="icon">

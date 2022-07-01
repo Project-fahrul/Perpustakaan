@@ -53,6 +53,14 @@
                      </a>
                  </li>
                  <li class="nav-item">
+                     <a href="<?php echo $this->config->config['base_url'] . 'peminjaman' ?>" class="nav-link">
+                         <i class="nav-icon fas fa-shopping-bag"></i>
+                         <p>
+                             Peminjaman
+                         </p>
+                     </a>
+                 </li>
+                 <li class="nav-item">
                      <a href="<?php echo $this->config->config['base_url'] . 'login/signout' ?>" class="nav-link">
                          <i class="nav-icon fas fa-sign-out-alt"></i>
                          <p>

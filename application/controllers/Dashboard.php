@@ -14,6 +14,7 @@ class Dashboard extends CI_Controller{
         $this->load->model('mahasiswa_model');
         $this->load->model('penerbit_model');
         $this->load->model('buku_model');
+        $this->load->model('peminjaman_model');
 
         //load data session
         $nim = $this->session->userdata("nim");

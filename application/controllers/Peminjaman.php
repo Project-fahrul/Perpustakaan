@@ -11,7 +11,7 @@ class Peminjaman extends CI_Controller
         $this->load->helper(array('url'));
         $this->load->model('admin_model');
         $this->load->model('buku_model');
-        $this->load->model('penerbit_model');
+        $this->load->model('mahasiswa_model');
         $this->load->model('peminjaman_model');
 
         //load data session
@@ -42,36 +42,40 @@ class Peminjaman extends CI_Controller
         //set validation rules
         $this->form_validation->set_rules('action', "Action", "required");
         $this->form_validation->set_rules('id', "id", "required");
-        $this->form_validation->set_rules('judul', "Judul", "required");
-        $this->form_validation->set_rules('pengarang', "Pengarang", "required");
-        $this->form_validation->set_rules('jumlah', "Jumlah", "required");
-        $this->form_validation->set_rules('penerbit', "Penerbit", "required");
+        $this->form_validation->set_rules('id_peminjaman', "Judul", "required");
+        $this->form_validation->set_rules('mahasiswa', "Pengarang", "required");
+        $this->form_validation->set_rules('buku', "Jumlah", "required");
+        $this->form_validation->set_rules('tanggal_pinjam', "Penerbit", "required");
+        $this->form_validation->set_rules('tanggal_kembali', "Penerbit", "required");
 
         if ($this->form_validation->run()) {
             $action = $this->input->post('action');
             $id = $this->input->post('id');
-            $judul = $this->input->post('judul');
-            $pengarang = $this->input->post('pengarang');
-            $jumlah = $this->input->post('jumlah');
-            $penerbit = $this->input->post('penerbit');
+            $id_peminjaman = $this->input->post('id_peminjaman');
+            $mahasiswa = $this->input->post('mahasiswa');
+            $buku = $this->input->post('buku');
+            $tanggal_pinjam = $this->input->post('tanggal_pinjam');
+            $tanggal_kembali = $this->input->post('tanggal_kembali');
 
             if ($action == 'add') {
-                $this->buku_model->insert(
-                    $judul,
-                    $jumlah,
-                    $pengarang,
-                    $penerbit
+                $this->peminjaman_model->insert(
+                    $id_peminjaman,
+                    $mahasiswa,
+                    $buku,
+                    $tanggal_pinjam,
+                    $tanggal_kembali
                 );
             } else if ($action == 'edit') {
-                $this->buku_model->update(
+                $this->peminjaman_model->update(
                     $id,
-                    $judul,
-                    $jumlah,
-                    $pengarang,
-                    $penerbit
+                    $id_peminjaman,
+                    $mahasiswa,
+                    $buku,
+                    $tanggal_pinjam,
+                    $tanggal_kembali
                 );
             }
-            redirect($this->config->config['base_url'] . 'buku');
+            redirect($this->config->config['base_url'] . 'peminjaman');
         }
 
         //create data objeck
@@ -97,9 +101,10 @@ class Peminjaman extends CI_Controller
 
     public function list(){
         $res = [];
-        $data = $this->buku_model->get();
+        $data = $this->peminjaman_model->get();
         foreach($data as $d){
-            $d->penerbit = $this->penerbit_model->findById($d->penerbit)->penerbit_buku;
+            $d->mahasiswa = $this->mahasiswa_model->findById($d->mahasiswa)->fullname;
+            $d->buku = $this->buku_model->findById($d->buku)->judul;
             array_push($res, $d);
         }
         return $this->output
@@ -111,10 +116,10 @@ class Peminjaman extends CI_Controller
     public function delete(){
         $id = $this->input->get('id', true);
         if(isset($id)){
-            $res = $this->buku_model->delete($id);
+            $res = $this->peminjaman_model->delete($id);
             if(!$res)
-                $this->session->set_flashdata('error', 'Error delete buku');
+                $this->session->set_flashdata('error', 'Error delete peminjaman');
         }
-        redirect($this->config->config['base_url'].'buku');
+        redirect($this->config->config['base_url'].'peminjaman');
     }
 }

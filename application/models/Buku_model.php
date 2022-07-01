@@ -54,4 +54,12 @@ class Buku_model extends CI_Model{
        $query =  $this->db->get($this->table);
        return $query->num_rows();
     }
+
+    public function findById($id){
+        $query = $this->db->get_where($this->table, array(
+            'id' => $id
+        ));
+
+        return $query->row(1);
+    }
 }
