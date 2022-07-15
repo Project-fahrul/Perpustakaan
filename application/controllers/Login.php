@@ -10,30 +10,29 @@ class Login extends CI_Controller
         parent::__construct();
         $this->load->library(array('session'));
         $this->load->helper(array('url'));
-        $this->load->model('admin_model');
+        $this->load->model('mahasiswa_model');
 
-        
-         //load data session
-         $nim = $this->session->userdata("nim");
-         $email = $this->session->userdata("email");
- 
-         //check if data session is exist
-         if(!isset($nim) || !isset($email)){
-             return;
-         }
-         
-         // load data admin from database by email and nim
-         $this->me = $this->admin_model->checkAdminByEmaiAndNim($email, $nim);
 
+        //load data session
+        $nim = $this->session->userdata("nim");
+        $email = $this->session->userdata("email");
+
+        //check if data session is exist
+        if (!isset($nim) || !isset($email)) {
+            return;
+        }
+
+        // load data admin from database by email and nim
+        $this->me = $this->mahasiswa_model->checkMahasiswaByEmaiAndNim($email, $nim);
     }
 
     public function index()
-    {         
-         //check data admin if it have been set
-         if(!is_null($this->me)){
-             redirect($this->config->config['base_url'].'dashboard');
-             return;
-         }
+    {
+        //check data admin if it have been set
+        if (!is_null($this->me)) {
+            redirect($this->config->config['base_url'] . 'dashboard');
+            return;
+        }
 
         //create data objeck
         $data = new stdClass();
@@ -53,18 +52,23 @@ class Login extends CI_Controller
         //check validation
         if ($this->form_validation->run()) {
             //check mahasiswa in database
-            $admin = $this->admin_model->checkAdminByEmailPassword($this->input->post("email"), 
-                $this->input->post("password"));
+            $admin = $this->mahasiswa_model->checkMahasiswaByEmailPassword(
+                $this->input->post("email"),
+                $this->input->post("password")
+            );
 
             if (!is_null($admin)) {
                 $this->session->set_userdata([
                     "nim" => $admin->nim,
                     "email" => $admin->email
                 ]);
-                redirect($this->config->config['base_url'] . "dashboard");
+                if ($admin->role == 'mhs')
+                    $data->error = "You are not admin";
+                else
+                    redirect($this->config->config['base_url'] . "dashboard");
             } else
-            $data->error = "Email or Password invalid";
-        }else if($this->input->method() == 'post'){
+                $data->error = "Email or Password invalid";
+        } else if ($this->input->method() == 'post') {
             $data->error = validation_errors();
         }
 
@@ -92,11 +96,12 @@ class Login extends CI_Controller
         $this->form_validation->set_rules("fullname", "Nama", "required");
         $this->form_validation->set_rules("prodi", "Prodi", "required");
         $this->form_validation->set_rules("email", "Email", "required");
+        $this->form_validation->set_rules("role", "Role", "required|in_list[mhs,admin]");
         $this->form_validation->set_rules("password", "Password", "required");
         $this->form_validation->set_rules("re-password", "Re Password", "required|matches[password]");
 
         //run form validation
-        if($this->form_validation->run()){
+        if ($this->form_validation->run()) {
             // validation is valid, then get form data
             $nim = $this->input->post('nim');
             $kelas    = $this->input->post('kelas');
@@ -104,11 +109,12 @@ class Login extends CI_Controller
             $email    = $this->input->post('email');
             $password = $this->input->post('password');
             $prodi = $this->input->post('prodi');
-            
-            $this->admin_model->registerAdmin($email, $password, $nim, $nama, $kelas, $prodi);
+            $role = $this->input->post('role');
+
+            $this->mahasiswa_model->insert($nama, $email, $nim, $kelas, $prodi, '', $role, $password);
             redirect($this->config->config['base_url']);
-        }else if($this->input->method() == 'post'){
-          $data->error = validation_errors();
+        } else if ($this->input->method() == 'post') {
+            $data->error = validation_errors();
         }
 
         $this->load->view('header', $data);
@@ -116,10 +122,11 @@ class Login extends CI_Controller
         $this->load->view('footer');
     }
 
-    public function signout(){
-        if(!is_null($this->me)){
-            $this->session->unset_userdata(["nim",'email']);
+    public function signout()
+    {
+        if (!is_null($this->me)) {
+            $this->session->unset_userdata(["nim", 'email']);
         }
         redirect($this->config->config['base_url']);
-    } 
+    }
 }

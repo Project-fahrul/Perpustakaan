@@ -10,7 +10,6 @@ class Mahasiswa extends CI_Controller
         parent::__construct();
         $this->load->library(array('session'));
         $this->load->helper(array('url'));
-        $this->load->model('admin_model');
         $this->load->model('mahasiswa_model');
 
         //load data session
@@ -23,7 +22,7 @@ class Mahasiswa extends CI_Controller
         }
 
         // load data admin from database by email and nim
-        $this->me = $this->admin_model->checkAdminByEmaiAndNim($email, $nim);
+        $this->me = $this->mahasiswa_model->checkMahasiswaByEmaiAndNim($email, $nim);
 
         //check data admin if it have been set
         if (is_null($this->me)) {
@@ -103,7 +102,7 @@ class Mahasiswa extends CI_Controller
     } 
 
     public function list(){
-        $data = $this->mahasiswa_model->get();
+        $data = $this->mahasiswa_model->get_Rolemahasiswa();
         return $this->output
             ->set_content_type('application/json')
             ->set_status_header(200)

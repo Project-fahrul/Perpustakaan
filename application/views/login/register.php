@@ -41,6 +41,12 @@
                     </div>
                 </div>
                 <div class="input-group mb-3">
+                    <select class="form-control" style='border-right: 1px solid #ced4da;' name="role">
+                        <option value="mhs">Mahasiswa</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="input-group mb-3">
                     <input type="email" class="form-control" placeholder="Email" required name="email">
                     <div class="input-group-append">
                         <div class="input-group-text">

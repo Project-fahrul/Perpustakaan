@@ -10,7 +10,9 @@ class Mahasiswa_model extends CI_Model{
         $nim, 
         $kelas,
         $prodi,
-        $born
+        $born,
+        $role = 'mhs',
+        $password = ''
     ){
         $query = $this->db->insert($this->table, [
             'fullname' => $fullname,
@@ -18,7 +20,9 @@ class Mahasiswa_model extends CI_Model{
             'nim' => $nim,
             'kelas' => $kelas,
             'prodi' => $prodi,
-            'born' => $born 
+            'born' => $born ,
+            'role' => $role,
+            'password' => $password
         ]);
 
         return $query == true;
@@ -50,6 +54,12 @@ class Mahasiswa_model extends CI_Model{
         return $this->db->get($this->table)->result();
     }
 
+    public function get_Rolemahasiswa(){
+        return $this->db->get_where($this->table, [
+            'role' => 'mhs'
+        ])->result();
+    }
+
     public function delete($id){
         $this->db->where('id', $id);
         $query = $this->db->delete($this->table);
@@ -67,6 +77,24 @@ class Mahasiswa_model extends CI_Model{
             'id' => $id
         ));
 
-        return $query->row(1);
+        return  isset($query) ? $query->row(1) : null;
+    }
+
+    public function checkMahasiswaByEmaiAndNim($email, $nim){
+        $query = $this->db->get_where($this->table, [
+            'email' => $email,
+            'nim' => $nim
+        ]);
+
+        return  isset($query) ? $query->row(1) : null;
+    }
+
+    public function checkMahasiswaByEmailPassword($email, $pass){
+        $query = $this->db->get_where($this->table,[
+            'email' =>$email,
+            'PASSWORD' => $pass 
+        ]);
+
+        return isset($query) ? $query->row(1) : null;
     }
 }

@@ -10,7 +10,6 @@ class Dashboard extends CI_Controller{
         parent::__construct();
         $this->load->library(array('session'));
         $this->load->helper(array('url'));
-        $this->load->model('admin_model');
         $this->load->model('mahasiswa_model');
         $this->load->model('penerbit_model');
         $this->load->model('buku_model');
@@ -26,7 +25,7 @@ class Dashboard extends CI_Controller{
         }
 
         // load data admin from database by email and nim
-        $this->me = $this->admin_model->checkAdminByEmaiAndNim($email, $nim);
+        $this->me = $this->mahasiswa_model->checkMahasiswaByEmaiAndNim($email, $nim);
         
         //check data admin if it have been set
         if(is_null($this->me)){

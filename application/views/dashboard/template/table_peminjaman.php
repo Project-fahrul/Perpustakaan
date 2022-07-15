@@ -125,7 +125,7 @@
             id.value = e.id;
             action.value = 'edit'
             label.innerHTML = "Edit Peminjaman"
-            id_peminjaman.value = e.kode_penerbit;
+            id_peminjaman.value = e.id_peminjaman;
             tanggal_pinjam.value = e.tanggal_pinjam;
             tanggal_kembali.value = e.tanggal_kembali;
 
